@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/opt.css">
+</head>
+
+<body>
+    <div class="background">
+        <div class="shape first"></div>
+        <div class="shape second"></div>
+    </div>
+    <form id="otpForm" method="post">
+        <h3>OTP Verification</h3>
+
+        <label for="otp">Enter OTP</label>
+        <input type="text" placeholder="Enter OTP" id="otp" name="otp">
+        <input  type="email" value='<%= email %>' name="email" style="display: none;" >
+        <input  type="password" value="<%= password %>" name='password' style="display: none;" >
+        <button type="submit" formaction="/auth/opt">Verify</button>
+        <button type="submit" formaction="/auth/resendopt">Resend</button>
+    </form>
+</body>
+
+</html>

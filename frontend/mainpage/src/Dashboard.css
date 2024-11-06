@@ -1,0 +1,263 @@
+/* ============================================
+   Global Styles
+============================================ */
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #080710;
+  color: #eaf0fb;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ============================================
+   Dashboard Container
+============================================ */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #080710;
+}
+
+/* ============================================
+   Header / Navbar
+============================================ */
+
+.dashboard-header {
+  background: linear-gradient(135deg, #1845ad, #8fc3e6);
+  color: #fff;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  margin-bottom: 40px;
+  transition: background 0.3s ease;
+}
+
+.dashboard-header:hover {
+  background: linear-gradient(135deg, #1a4fad, #9fd4f6);
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+.user-info span{
+  margin-left: 15px;
+}
+
+.user-info a,
+.logout-button {
+  color: #080710;
+  background-color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: 20px;
+  cursor: pointer;
+  border: none; /* Remove button default border */
+}
+
+.user-info a:hover,
+.logout-button:hover,
+.user-info a:focus,
+.logout-button:focus {
+  background-color: #d3705d;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   Main Content Area
+============================================ */
+
+.dashboard-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
+  width: 100%;
+}
+
+/* ============================================
+   Section Cards
+============================================ */
+
+.dashboard-section {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 20px;
+  width: calc(33.33% - 40px);
+  box-shadow: 0 4px 15px rgba(8, 7, 16, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #eaf0fb;
+}
+
+.dashboard-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(8, 7, 16, 0.6);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.dashboard-section h2 {
+  font-size: 20px;
+  color: #ffffff;
+  margin-bottom: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.dashboard-section p {
+  font-size: 16px;
+  color: #eaf0fb;
+}
+
+/* ============================================
+   Lists
+============================================ */
+
+.list,
+.events-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-item,
+.event-item {
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 16px;
+  color: #eaf0fb;
+}
+
+.list-item:last-child,
+.event-item:last-child {
+  border-bottom: none;
+}
+
+/* ============================================
+   Goal Progress
+============================================ */
+
+.goal-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 16px;
+  color: #eaf0fb;
+}
+
+/* ============================================
+   Achievement Badges
+============================================ */
+
+.achievement-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.achievement-badge {
+  background-color: #4a65d4; /* Main badge color */
+  color: #fff; /* Text color */
+  padding: 0.8rem 1.5rem; /* Balanced padding */
+  border-radius: 25px; /* Rounded corners */
+  margin: 10px; /* Space between badges */
+  font-size: 16px; /* Consistent font size */
+  font-weight: 600; /* Bold text for emphasis */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+  display: flex; /* Align items */
+  align-items: center; /* Center content vertically */
+}
+
+.achievement-badge:hover {
+  background-color: #3e57b0; /* Darker shade on hover */
+  transform: translateY(-3px); /* Slight lift effect on hover */
+}
+
+.achievement-badge i {
+  margin-right: 0.5rem; /* Space between icon and text */
+}
+
+/* ============================================
+   Responsive Design
+============================================ */
+
+@media (max-width: 1200px) {
+  .dashboard-section {
+    width: calc(33.33% - 40px);
+  }
+}
+
+@media (max-width: 1024px) {
+  .dashboard-section {
+    width: calc(50% - 40px);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-section {
+    width: 100%;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .user-info {
+    margin-top: 20px;
+  }
+
+  .achievement-badge {
+    padding: 0.6rem 1rem; /* Smaller padding on mobile */
+    font-size: 14px; /* Smaller font size on mobile */
+  }
+
+  .dashboard-content {
+    padding: 0 10px;
+  }
+}
+
+/* ============================================
+   Accessibility Enhancements
+============================================ */
+
+a:focus,
+button:focus {
+  outline: 2px solid #d3705d;
+  outline-offset: 2px;
+}
+
+
+
+/* ============================================
+   End of Styles
+============================================ */

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sign Up Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/register.css">
+</head>
+
+<body>
+    <div class="background">
+        <div class="shape first"></div>
+        <div class="shape second"></div>
+    </div>
+    <form id="signupForm" action="/auth/register" method="post">
+        <h3>Sign Up</h3>
+
+        <label for="email">Email</label>
+        <input type="email" placeholder="Enter your email" id="email" name="email" required>
+        
+        <label for="password">Password</label>
+        <input type="password" placeholder="Enter your password" id="password" name="password" required>
+        
+        <button type="submit" id="sendOtpButton">Submit</button>
+    </form>
+</body>
+
+</html>
