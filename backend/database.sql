@@ -44,6 +44,7 @@ CREATE TABLE submitassignment(
 
 
 CREATE TABLE schedule (
+    id SERIAL PRIMARY KEY,
     day INT,
     time VARCHAR(50),
     subject VARCHAR(50),
