@@ -1,112 +1,79 @@
-import supabase from '../database/db.js'
+import db from '../database/db.js'
 import bcrypt from 'bcrypt'
-
-const local = async (username, password, done) => {
+const local= async(username,password,done)=>{
     console.log(username)
-    try {
-        // Fetch the user by email
-        const { data: user, error: userError } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', username)
-            .single() // Get single user
-
-        if (userError) {
-            console.log('Error fetching user:', userError)
-            return done(null, false)
+    try{
+        const result=await db.query('SELECT * FROM users WHERE email=$1',[username])
+        
+        const user=result.rows[0]
+  
+        if(!user){
+            return done(null,false)
         }
-
-        if (!user) {
-            return done(null, false)
-        }
-
-        const flag = await bcrypt.compare(password, user.password)
-        if (flag) {
-            try {
-                const { data: profile, error: profileError } = await supabase
-                    .from('user_profile')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .single() // Get single profile
-
-                if (profileError) {
-                    console.log('Error fetching profile in local strategy:', profileError)
-                } else if (profile) {
-                    user.profile = profile.profile_id
-                } else {
-                    console.log('Create your profile')
+        const flag=await bcrypt.compare(password,user.password)
+        if(flag){
+            try{
+                const result=await db.query('SELECT * FROM user_profile WHERE user_id=$1',[user.id])
+                const val=result.rows
+                if(val.length>0){
+                    user.profile=val[0].profile_id
                 }
-            } catch (err) {
-                console.log('Error in fetching profile in local strategy:', err)
+                else{
+                    console.log('create your profile')
+                }
+            }catch(err){
+                console.log('error in fetching profile in local staragy')
             }
-            return done(null, user)
-        } else {
-            return done(null, false)
+            return done(null,user)
         }
-    } catch (err) {
-        console.log('Error in local strategy:', err)
+        else{
+            return done(null,false)
+        }
+        
+    }catch(err){
+        console.log('error in local stragity')
     }
 }
-
-const google = async (accessToken, refreshToken, profile, done) => {
-    try {
-        const email = profile.emails[0].value
+const google=async(accessToken,refreshToken,profile,done)=>{
+    // console.log(profile)
+    try{
+        const email=profile.emails[0].value
         console.log(email)
-        const { data: user, error: userError } = await supabase
-            .from('users')
-            .select('*')
-            .eq('email', email)
-            .single() // Get single user
-
-        if (userError) {
-            console.log('Error fetching user:', userError)
-        }
-
-        if (user) {
-            try {
-                const { data: profile, error: profileError } = await supabase
-                    .from('user_profile')
-                    .select('*')
-                    .eq('user_id', user.id)
-                    .single() // Get single profile
-
-                if (profileError) {
-                    console.log('Error fetching profile in Google strategy:', profileError)
-                } else if (profile) {
-                    user.profile = profile.profile_id
-                } else {
-                    console.log('Create your profile')
+        const result=await db.query("SELECT * FROM users WHERE email=$1",[email])
+        const user=result.rows[0]
+        if(user){
+            try{
+                const result=await db.query('SELECT * FROM user_profile WHERE user_id=$1',[user.id])
+                const val=result.rows
+                if(val.length>0){
+                    user.profile=val[0].profile_id
                 }
-            } catch (err) {
-                console.log('Error in fetching profile in Google strategy:', err)
+                else{
+                    console.log('create your profile')
+                }
+            }catch(err){
+                console.log('error in fetching profile in local staragy')
             }
-            done(null, user)
-        } else {
-            try {
-                // Create a new user with a placeholder password
-                const { data: newUser, error: insertError } = await supabase
-                    .from('users')
-                    .insert([{ email, password: 'google' }])
-                    .select() // Get the inserted user
-
-                if (insertError) {
-                    console.log('Error creating new user in Google strategy:', insertError)
-                    return done(null, false)
-                }
-
-                done(null, newUser[0]) // Return the new user
-            } catch (err) {
-                console.log('Error in Google strategy:', err)
+            done(null,user)
+        }
+        else{
+            try{
+                const newuser=await db.query('INSERT INTO users (email,password) VALUES ($1,$2) RETURNING*',[email,'google'])
+                done(null,newuser.rows[0])
+            }catch(err){
+                console.log('error in google ksd function')
             }
         }
-    } catch (err) {
-        console.log('Error in Google function:', err)
+    }catch(err){
+        console.log('error in google function')
     }
 }
 
-const Strategy = {
+
+
+
+const Strategy={
     local,
     google
 }
-
 export default Strategy

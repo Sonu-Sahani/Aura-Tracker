@@ -1,98 +1,59 @@
-import supabase from '../database/db.js';
-
-// Profile data submission
-const profileDataSubmit = async (req, res) => {
-    console.log(req.session);
-    const flag = req.isAuthenticated();
-
-    if (flag) {
-        const profile_id = req.body.registrationNo;
-        const student_name = req.body.fullName;
-        const user_id = req.user.id;
-        const gender = req.body.gender;
-        const year = req.body.year;
-        const branch = req.body.branch;
-        const contact = req.body.contact;
-        const email = req.body.email;
-        const profile_picture_url = "/sjkfsjkks"; // Replace with actual URL if available
-
-        try {
-            const { data, error } = await supabase
-                .from('user_profile')
-                .insert([{
-                    profile_id,
-                    student_name,
-                    user_id,
-                    registration_num: profile_id,
-                    gender,
-                    year,
-                    branch,
-                    contact,
-                    email,
-                    profile_picture_url
-                }]);
-
-            if (error) {
-                console.log("Error in inserting data in profile:", error);
-                return res.json({ submitted: false });
+import db from '../database/db.js'
+//profile data submmit 
+const profileDataSubmit=async(req,res)=>{
+    
+        console.log(req.session)
+        const flag=req.isAuthenticated()
+        if(flag){
+            // console.log(req.body)
+            const profile_id=req.body.registrationNo
+            const student_name=req.body.fullName
+            const user_id=req.user.id
+            const gender=req.body.gender
+            const year=req.body.year
+            const branch=req.body.branch
+            const contact=req.body.contact
+            const email=req.body.email
+            const profile_picture_url="/sjkfsjkks"
+            try{
+                const result=await db.query('INSERT INTO user_profile (profile_id,student_name,user_id,registration_num,gender,year,branch,contact,email,profile_picture_url) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',[profile_id,student_name,user_id,profile_id,gender,year,branch,contact,email,profile_picture_url])
+                req.user.profile=profile_id
+                res.json({submitted:true})
+            }catch(err){
+                console.log("error in inserting data in profile")
+                res.json({submitted:false})
             }
-
-            req.user.profile = profile_id;
-            res.json({ submitted: true });
-        } catch (err) {
-            console.log("Error in inserting data in profile:", err);
-            res.json({ submitted: false });
         }
-    } else {
-        console.log("User is not authenticated");
-    }
-};
-
-// Profile data retrieval
-const profileDataGet = async (req, res) => {
-    try {
-        if (req.isAuthenticated()) {
-            const { data, error } = await supabase
-                .from('user_profile')
-                .select('*')
-                .eq('user_id', req.user.id)
-                .single();
-
-            if (error) {
-                console.log('Error in getting profile data from user_profile:', error);
-                return res.status(500).json({ error: 'Failed to retrieve profile data' });
-            }
-
-            res.json(data);
+        else{
+            console.log("HILLoj")
+            // res.json({isauthenticated:false})
         }
-    } catch (err) {
-        console.log('Error in getting profile data from user_profile:', err);
-        res.status(500).json({ error: 'An error occurred while retrieving profile data' });
-    }
-};
+}
 
-// Get student name and points
-const getname = async (req, res) => {
-    if (req.isAuthenticated()) {
-        const { data, error } = await supabase
-            .from('user_profile')
-            .select('student_name, points')
-            .eq('user_id', req.user.id)
-            .single();
-
-        if (error) {
-            console.log('Error fetching name and points:', error);
-            return res.status(500).json({ error: 'Failed to retrieve name and points' });
+const profileDataGet=async(req,res)=>{
+    try{
+        if(req.isAuthenticated()){
+            const result=await db.query('SELECT * FROM user_profile WHERE user_id=$1',[req.user.id])
+            const user=result.rows[0]
+            res.json(user)
         }
-
-        res.json(data);
+        // const result=await db.query('SELECT * FROM user_profile WHERE user_id=$1',[req.user.id])
+    }catch(err){
+        console.log('error in getting profile data from user_profile')
     }
 }
 
-const profile = {
+const getname=async(req,res)=>{
+    if(req.isAuthenticated()){
+        const result=await db.query('SELECT student_name,points FROM user_profile WHERE user_id=$1',[req.user.id])
+        const data=result.rows[0]
+        res.json(data)
+    }
+}
+const profile={
     profileDataSubmit,
     profileDataGet,
     getname
 }
 
-export default profile;
+export default profile

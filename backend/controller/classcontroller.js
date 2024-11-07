@@ -1,35 +1,24 @@
-import supabase from '../database/db.js'
-
-const getclass = async (req, res) => {
-    try {
-        const today = req.query.day;
-        console.log(today);
-
-        // Fetch the schedule for the specified day
-        const { data, error } = await supabase
-            .from('schedule')
-            .select('*')
-            .eq('day', today);
-
-        if (error) {
-            console.log("Error in fetching schedule data:", error);
-            return res.status(500).json({ error: 'Failed to fetch schedule data' });
-        }
-
-        if (req.isAuthenticated()) {
-            if (req.user.profile) {
-                return res.json(data);
+import db from '../database/db.js'
+const getclass=async(req,res)=>{
+    try{
+        const today=req.query.day
+        console.log(today)
+        const result=await db.query('SELECT * FROM schedule WHERE day=$1',[today])
+        const data=result.rows
+        if(req.isAuthenticated()){
+            if(req.user.profile){
+                res.json(data)
             }
         }
-    } catch (err) {
-        console.log("Error in fetching data:", err);
-        res.status(500).json({ error: 'An error occurred while fetching class schedule' });
+    }catch(err){
+        console.log("Error in fetching data")
     }
 }
 
-const cl = {
+const cl={
     getclass
 }
 
-export default cl;
+export default cl
+
 // uC*gWmShknMYS3h

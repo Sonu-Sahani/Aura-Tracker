@@ -38,7 +38,7 @@ router.post('/resendopt',authcontroller.resendopt)
 //google authentication routes
 
 router.get('/google',
-    passport.authenticate('google', { scope: ['profile','email'] }))
+    passport.authenticate('google', { scope: ['profile','email'],prompt:'consent select_account' }))
   
   router.get('/google/dashboard', 
     passport.authenticate('google', { failureRedirect: '/login' }),

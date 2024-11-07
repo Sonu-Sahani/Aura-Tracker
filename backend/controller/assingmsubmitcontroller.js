@@ -1,146 +1,113 @@
-import supabase from '../database/db.js'
+import db from '../database/db.js'
 import multer from 'multer'
 
-const storage = multer.memoryStorage()
-const upload = multer({
-    storage: storage,
-    limits: { fileSize: 10000000 }
+
+const storage=multer.memoryStorage()
+const upload=multer({
+    storage:storage,
+    limits:{fileSize:10000000}
 }).single("file")
 
-const getassigment = async (req, res) => {
-    try {
-        if (req.isAuthenticated()) {
-            const { data, error: profileError } = await supabase
-                .from('user_profile')
-                .select('year, branch')
-                .eq('user_id', req.user.id)
 
-            if (profileError) throw profileError
-
-            const userData = data;
-
-            if (userData.length > 0) {
+const getassigment=async(req,res)=>{
+    try{
+        if(req.isAuthenticated()){
+            const result=await db.query('SELECT year,branch FROM user_profile WHERE user_id=$1',[req.user.id])
+            const data=result.rows
+            if(data.length>0){
                 try {
                     const currentDate = new Date().toISOString().split('T')[0];
-
-                    const { data: assignments, error: assignmentError } = await supabase
-                        .from('uploadedassignment')
-                        .select('id, title, duedate, comments, year, branch')
-                        .eq('year', userData[0].year)
-                        .eq('branch', userData[0].branch)
-                        .gte('duedate', currentDate) // Ensure due date is greater than or equal to today
-
-                    if (assignmentError) throw assignmentError
-
+                    //Now funtion incluede time also 
+                    const result = await db.query("SELECT id, title, duedate, comments, year, branch FROM uploadedassignment WHERE year = $1 AND branch = $2 AND  TO_DATE(duedate, 'YY-MM-DD')>=NOW()::date", [data[0].year, data[0].branch]);
+                    const assignments = result.rows;
+                    
                     if (assignments.length > 0) {
                         let senddata = [];
-
+                        
                         for (const assignment of assignments) {
-                            const { data: submissionData, error: submissionError } = await supabase
-                                .from('submitassignment')
-                                .select('*')
-                                .eq('assignment_id', assignment.id)
-                                .eq('profile_id', req.user.profile)
-
-                            if (submissionError) throw submissionError
-
+                            const submissionResult = await db.query('SELECT * FROM submitassignment WHERE assignment_id = $1 AND profile_id=$2', [assignment.id,req.user.profile]);
+                            
                             // Add the assignment to senddata if it has not been submitted
-                            if (submissionData.length === 0) {
+                            if (submissionResult.rows.length === 0) {
                                 senddata.push(assignment);
+                                console.log(assignment);
                             }
                         }
-
-                        res.json(senddata); // `senddata` now contains only unsubmitted assignments
+                        
+                        console.log(senddata); // `senddata` now contains only unsubmitted assignments
+                        res.json(senddata);
                     }
                 } catch (error) {
-                    console.log('Error fetching assignments:', error.message)
-                    res.status(500).send('Internal Server Error')
+                   
                 }
-            } else {
+                
+            }else{
                 console.log("create your profile")
-                res.status(404).send('Profile not found')
             }
         }
-    } catch (err) {
-        console.log('Error in getting data for assignment:', err.message)
-        res.status(500).send('Internal Server Error')
+    }catch(err){
+        console.log('err in getting data for assignment')
     }
 }
 
-const viewingassignment = async (req, res) => {
-    if (req.isAuthenticated()) {
-        if (req.user.profile) {
+
+
+const viewingassignment=async(req,res)=>{
+    if(req.isAuthenticated()){
+        if(req.user.profile){
             try {
-                const id = req.params.id
-                const { data: arr, error } = await supabase
-                    .from('uploadedassignment')
-                    .select('filename, data')
-                    .eq('id', id)
-
-                if (error) throw error
-
-                if (arr.length > 0) {
-                    res.setHeader('Content-Type', 'application/pdf') // Set content type to PDF
-                    res.setHeader('Content-Disposition', `inline; filename=${arr[0].filename}`)
-                    res.send(arr[0].data) // Send PDF data to display in browser
-                } else {
-                    res.send('File not found')
-                }
-            } catch (err) {
-                console.log('Error displaying uploaded assignment:', err.message)
-                res.status(500).send('Internal Server Error')
+            const id = req.params.id
+            const result = await db.query('SELECT filename, data FROM uploadedassignment WHERE id = $1', [id])
+            const arr = result.rows
+    
+            if (arr.length > 0) {
+                res.setHeader('Content-Type', 'application/pdf') // Set content type to PDF
+                res.setHeader('Content-Disposition', `inline; filename=${arr[0].filename}`) //
+                res.send(arr[0].data) // Send PDF data to display in browser
+            } else {
+                res.send('File not found')
             }
+        } catch (err) {
+            console.log('Error displaying uploaded assignment:')
         }
-    }
+             }
+        }
+
 }
 
-const postassigmentdata = (req, res) => {
-    upload(req, res, async (error) => {
-        if (req.isAuthenticated()) {
-            try {
-                const profile_id = req.user.profile
-                const assignment_id = req.body.assignmentId
-                const submitdate = new Date().toISOString().split('T')[0]; // Format as 'YYYY-MM-DD'
-                const filename = req.file.originalname
-                const data = req.file.buffer
 
-                const { error: insertError } = await supabase
-                    .from('submitassignment')
-                    .insert([{ profile_id, assignment_id, submitdate, filename, data, completed: true }])
 
-                if (insertError) throw insertError
+const postassigmentdata=(req,res)=>{
+    upload(req,res,async(error)=>{
+        if(req.isAuthenticated()){
+            try{
+                const profile_id=req.user.profile
+                const assignment_id=req.body.assignmentId
+                const year = new Date().getFullYear();       
+                const month = new Date().getMonth() + 1;     
+                const day = new Date().getDate();   
+                const submitdate=`${day}-${month}-${year}`
+                const filename=req.file.originalname
+                const data=req.file.buffer
+                await db.query('INSERT INTO submitassignment (profile_id,assignment_id,submitdate,filename,data,completed) VALUES ($1,$2,$3,$4,$5,$6)',[profile_id,assignment_id,submitdate,filename,data,true])
+                try{
+                    const result=await db.query('SELECT points FROM user_profile WHERE profile_id=$1',[req.user.profile])
+                    const aura=result.rows[0].points
+                    await db.query('UPDATE user_profile SET points = $1 WHERE profile_id=$2',[aura+10,req.user.profile])
+                }catch(err){
 
-                try {
-                    const { data: userData, error: pointsError } = await supabase
-                        .from('user_profile')
-                        .select('points')
-                        .eq('profile_id', req.user.profile)
-
-                    if (pointsError) throw pointsError
-
-                    const aura = userData[0].points
-                    await supabase
-                        .from('user_profile')
-                        .update({ points: aura + 10 })
-                        .eq('profile_id', req.user.profile)
-
-                } catch (err) {
-                    console.log('Error updating points:', err.message)
                 }
-
-                res.json({ completed: true })
-            } catch (err) {
-                console.log('Error in inserting submitting data:', err.message)
-                res.status(500).send('Internal Server Error')
+                res.json({completed:true})
+            }catch(err){
+                console.log('error in inserting submitting data')
             }
         }
-    })
+     })
 }
 
-const assign = {
+const assign={
     getassigment,
     viewingassignment,
     postassigmentdata
 }
-
 export default assign
