@@ -67,6 +67,7 @@ function Dashboard() {
 
   return (
     isAuthenticated && (
+      <div className="dashboard-body">
       <div className="dashboard">
         <header className="dashboard-header">
           <h1>Dashboard</h1>
@@ -113,6 +114,7 @@ function Dashboard() {
 
 
         </main>
+      </div>
       </div>
     )
   );

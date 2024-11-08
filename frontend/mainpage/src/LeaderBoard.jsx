@@ -20,7 +20,7 @@ const Leaderboard = () => {
   
 
   return (
-    <div id='bdsk'>
+    <div id='leaderboard-body'>
     <div  className="leaderboard-container">
       <div className="leaderboard-header">
         {/* <img src="logo.png" alt="Logo" className="leaderboard-logo" /> */}

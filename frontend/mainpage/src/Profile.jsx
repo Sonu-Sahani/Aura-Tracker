@@ -14,6 +14,8 @@ const Profile = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
 
   // Check if the user is authenticated
   const checkAuthentication = async () => {
@@ -42,6 +44,7 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("Error checking authentication:", error);
+      alert("Network error. Redirecting to login.");
       window.location.href = "http://localhost:3000/auth/login";
     }
   };
@@ -56,6 +59,7 @@ const Profile = () => {
       if (response.ok) {
         const data = await response.json();
         setFormData(data);
+        setIsSubmitted(true); // Mark as submitted if data is retrieved successfully
       } else {
         console.error("Failed to fetch data");
       }
@@ -78,8 +82,10 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const urlEncodedData = new URLSearchParams(formData).toString();
+    const endpoint = isSubmitted ? "update" : "submit"; // Determine if this is an update or submit
+    const apiUrl = `http://localhost:3000/profile/${endpoint}`;
     try {
-      const response = await fetch("http://localhost:3000/profile/submit", {
+      const response = await fetch(apiUrl, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -89,10 +95,12 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        // alert("Data submitted successfully!");
-        const data=await response.json()
-        if(data.submitted){
-          window.location.href="http://localhost:4000"
+
+        const data = await response.json()
+        if (data.submitted) {
+          window.location.href = "http://localhost:4000"
+          alert("Data submitted successfully!");
+          setIsSubmitted(true); // Update submission status on successful submission
         }
         // fetchData(); // Re-fetch data to update form fields with latest saved data
       } else {
@@ -104,23 +112,13 @@ const Profile = () => {
     }
   };
 
-  const handleReset = () => {
-    setFormData({
-      fullName: "",
-      registrationNo: "",
-      gender: "",
-      year: "",
-      branch: "",
-      contact: "",
-      email: ""
-    });
-  };
 
   if (isLoading) {
     return <p>Loading...</p>;
   }
 
   return isAuthenticated ? (
+    <div className="form-body">
     <div className="form-container">
       <h2>Student Registration Form</h2>
       <form onSubmit={handleSubmit}>
@@ -205,14 +203,15 @@ const Profile = () => {
         </label>
 
         <div className="form-buttons">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={handleReset}>Reset</button>
+          <button type="submit">{isSubmitted ? "Update Profile" : "Submit"}</button>
         </div>
       </form>
+    </div>
     </div>
   ) : (
     <p>Redirecting to login...</p>
   );
+
 };
 
 export default Profile;

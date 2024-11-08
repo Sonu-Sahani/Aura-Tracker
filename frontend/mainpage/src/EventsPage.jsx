@@ -54,6 +54,7 @@ const EventsPage = () => {
 
   return (
     isAuthenticated && (
+      <div className="events-body">
       <div className="events-page">
         {events.map((event, index) => (
           <div className="event-card" key={index}>
@@ -65,6 +66,7 @@ const EventsPage = () => {
             </a>
           </div>
         ))}
+      </div>
       </div>
     )
   );
