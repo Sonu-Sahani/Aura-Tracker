@@ -16,6 +16,7 @@ import assignmentroute from './router/assignment.js'
 import assignmentsubmitroute from './router/assignsubmit.js'
 import leaderboardroute from './router/leaderboard.js'
 import classroute from './router/class.js'
+import studyroute from './router/studygoal.js'
 env.config()
 const app=express()
 
@@ -58,6 +59,7 @@ app.use('/assignment',assignmentroute)
 app.use('/api',assignmentsubmitroute)
 app.use('/user',leaderboardroute)
 app.use('/class',classroute)
+app.use('/study',studyroute)
 //
 
 

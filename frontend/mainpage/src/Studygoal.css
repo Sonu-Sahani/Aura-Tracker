@@ -1,0 +1,98 @@
+/* CSS for StudyGoals component */
+.study-goals {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .study-goals h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .goal-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .goal-input input[type="text"],
+  .goal-input input[type="date"],
+  .goal-input textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .goal-input textarea {
+    height: 80px;
+    resize: none;
+  }
+  
+  .goal-input button {
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .goal-input button:hover {
+    background-color: #45a049;
+  }
+  
+  .goal-list {
+    margin-top: 20px;
+  }
+  
+  .goal-item {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .goal-item h3 {
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 5px;
+  }
+  
+  .goal-item p {
+    color: #555;
+    font-size: 14px;
+    margin: 5px 0;
+  }
+  
+  .goal-item button {
+    padding: 8px;
+    font-size: 14px;
+    color: #333;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .goal-item button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .goal-item button:active {
+    background-color: #ccc;
+  }
+  
