@@ -22,7 +22,7 @@ const StudyGoals = () => {
           setIsAuthenticated(true);
           fetchGoals(); // Fetch goals only if authenticated
         } else {
-          window.location.href='http://localhost:3000/auth/login'
+          window.location.href = 'http://localhost:3000/auth/login';
         }
       } catch (error) {
         console.error("Error checking authentication:", error);
@@ -45,7 +45,7 @@ const StudyGoals = () => {
     }
   };
 
-  // Add a new goal to the backend and update the state
+  // Add a new goal to the backend and update the state with the updated list from the backend
   const handleAddGoal = async () => {
     if (goalInput && targetDate) {
       const newGoal = { goal: goalInput, targetDate, notes, completed: false };
@@ -58,8 +58,8 @@ const StudyGoals = () => {
           body: JSON.stringify(newGoal),
         });
 
-        const savedGoal = await response.json();
-        setGoals([...goals, savedGoal]);
+        const updatedGoals = await response.json();
+        setGoals(updatedGoals); // Set goals to the updated list from the backend
         setGoalInput('');
         setTargetDate('');
         setNotes('');
@@ -81,8 +81,8 @@ const StudyGoals = () => {
         body: JSON.stringify({ completed: !completed }),
       });
 
-      const updatedGoal = await response.json();
-      setGoals(goals.map((goal) => (goal.id === id ? updatedGoal : goal)));
+      const updatedGoals = await response.json();
+      setGoals(updatedGoals);
     } catch (error) {
       console.error("Error updating goal:", error);
     }
@@ -91,12 +91,13 @@ const StudyGoals = () => {
   // Delete a goal from the backend and update the state
   const handleDeleteGoal = async (id) => {
     try {
-      await fetch(`http://localhost:3000/study/goals/${id}`, {
+      const response = await fetch(`http://localhost:3000/study/goals/${id}`, {
         method: 'DELETE',
         credentials: 'include',
       });
 
-      setGoals(goals.filter((goal) => goal.id !== id));
+      const updatedGoals = await response.json();
+      setGoals(updatedGoals);
     } catch (error) {
       console.error("Error deleting goal:", error);
     }
