@@ -18,9 +18,10 @@ const profileDataSubmit = async (req, res) => {
     const contact = req.body.contact;
     const email = req.body.email;
     const profile_picture_url = "/sjkfsjkks";
+    const section=req.body.section
     try {
       const result = await db.query(
-        "INSERT INTO user_profile (profile_id,student_name,user_id,registration_num,gender,year,branch,contact,email,profile_picture_url) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
+        "INSERT INTO user_profile (profile_id,student_name,user_id,registration_num,gender,year,branch,contact,email,profile_picture_url,section) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)",
         [
           profile_id,
           student_name,
@@ -32,6 +33,7 @@ const profileDataSubmit = async (req, res) => {
           contact,
           email,
           profile_picture_url,
+          section
         ]
       );
       req.user.profile = profile_id;

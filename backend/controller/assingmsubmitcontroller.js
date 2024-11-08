@@ -11,7 +11,7 @@ const getassigment = async (req, res) => {
   try {
     if (req.isAuthenticated()) {
       const result = await db.query(
-        "SELECT year,branch FROM user_profile WHERE user_id=$1",
+        "SELECT year,branch,section FROM user_profile WHERE user_id=$1",
         [req.user.id]
       );
       const data = result.rows;
@@ -20,8 +20,8 @@ const getassigment = async (req, res) => {
           const currentDate = new Date().toISOString().split("T")[0];
           //Now funtion incluede time also
           const result = await db.query(
-            "SELECT id, title, duedate, comments, year, branch FROM uploadedassignment WHERE year = $1 AND branch = $2 AND  TO_DATE(duedate, 'YY-MM-DD')>=NOW()::date",
-            [data[0].year, data[0].branch]
+            "SELECT id, title, duedate, comments, year, branch FROM uploadedassignment WHERE year = $1 AND branch = $2 AND section=$3 AND  TO_DATE(duedate, 'YY-MM-DD')>=NOW()::date",
+            [data[0].year, data[0].branch,data[0].section]
           );
           const assignments = result.rows;
 
