@@ -8,9 +8,9 @@ function Assignments() {
   const [assignments, setAssignments] = useState([]);
   const [selectedAssignment, setSelectedAssignment] = useState(null);
   const [file, setFile] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Check user authentication and fetch assignments if authenticated
     const checkAuthentication = async () => {
       try {
         const response = await fetch('http://localhost:3000/auth/check', {
@@ -20,7 +20,7 @@ function Assignments() {
 
         if (data.isAuthenticated) {
           setIsAuthenticated(true);
-          fetchAssignments(); // Fetch assignments if authenticated
+          fetchAssignments();
         } else {
           setIsAuthenticated(false);
           window.location.href = 'http://localhost:3000/auth/login';
@@ -28,7 +28,6 @@ function Assignments() {
       } catch (error) {
         console.error('Error checking authentication:', error);
         window.location.href = 'http://localhost:3000/auth/login';
-          
       }
     };
 
@@ -44,12 +43,13 @@ function Assignments() {
 
       const formattedData = data.map((assignment) => ({
         ...assignment,
-        dueDate: assignment.duedate, // Convert 'duedate' to 'dueDate'
-        completed: false,            // Default completed status if not provided
+        dueDate: assignment.duedate,
+        completed: false,
       }));
       setAssignments(formattedData);
     } catch (error) {
       console.error('Error fetching assignments:', error);
+      setError("Failed to load assignments. Please try again later.");
     }
   };
 
@@ -62,38 +62,37 @@ function Assignments() {
       alert("Please select a file before submitting.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('assignmentId', id);
-  
+
     try {
       const response = await fetch('http://localhost:3000/api/assignments/upload', {
         method: 'POST',
         body: formData,
         credentials: 'include',
       });
-  
+
       if (response.ok) {
-        const result = await response.json(); // Assuming the response contains { completed: true }
+        const result = await response.json();
         alert("File uploaded successfully!");
-  
-        // Update the assignments state to reflect the completion status
+
         setAssignments((prevAssignments) =>
           prevAssignments.map((assignment) =>
             assignment.id === id ? { ...assignment, completed: result.completed } : assignment
           )
         );
-  
-        setFile(null); // Clear the file input
+
+        setFile(null);
       } else {
         alert("Failed to upload file.");
       }
     } catch (error) {
       alert("Error uploading file.");
+      setError("An error occurred while submitting the assignment. Please try again.");
     }
   };
-  
 
   const handleShowDetails = (assignment) => {
     setSelectedAssignment(assignment);
@@ -109,7 +108,15 @@ function Assignments() {
 
   return (
     isAuthenticated && (
+      <div className='assignment-body'>
       <div className="assignment-page">
+        {error && <div className="error-message">{error}</div>}
+
+        {/* Back to Main Page Button */}
+        <button className="back-button" onClick={() => navigate('/')}>
+          Back to Main Page
+        </button>
+
         <h1>Assignments</h1>
         <ul className="assignment-list">
           {assignments.map((assignment) => (
@@ -119,7 +126,7 @@ function Assignments() {
               <button onClick={() => handleShowDetails(assignment)}>View Details</button>
               
               <div className="file-upload">
-                <input type="file"  accept='.pdf' onChange={handleFileChange} />
+                <input type="file" accept='.pdf' onChange={handleFileChange} />
                 <button onClick={() => handleSubmit(assignment.id)}>Submit File</button>
               </div>
             </li>
@@ -139,6 +146,7 @@ function Assignments() {
             </div>
           </div>
         )}
+      </div>
       </div>
     )
   );

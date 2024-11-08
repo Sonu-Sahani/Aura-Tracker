@@ -44,10 +44,21 @@ CREATE TABLE submitassignment(
 
 
 CREATE TABLE schedule (
-    id SERIAL PRIMARY KEY,
     day INT,
     time VARCHAR(50),
     subject VARCHAR(50),
     teacher VARCHAR(50),
     venue VARCHAR(50)
+);
+
+
+
+
+CREATE TABLE study_goals (
+    id SERIAL PRIMARY KEY,
+    goal VARCHAR(255) NOT NULL,
+    target_date DATE NOT NULL,
+    notes TEXT,
+    completed BOOLEAN DEFAULT FALSE,
+    profile_id INT -- foreign key if linking to a users table
 );

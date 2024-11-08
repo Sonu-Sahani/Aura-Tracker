@@ -6,7 +6,7 @@ import Assignment from './Assignments';
 import EventsPage from './EventsPage';
 import LeaderBoard from './LeaderBoard';
 import TodayClass from './TodayClass';
-
+import StudyGoal from './Studygoal'
 function App() {
   return (
     <BrowserRouter>
@@ -17,7 +17,7 @@ function App() {
         <Route path="EventsPage" element={<EventsPage />} />
         <Route path="LeaderBoard" element={<LeaderBoard />} />
         <Route path="TodayClass" element={<TodayClass />} />
-        
+        <Route path="/goals" element={<StudyGoal />}/>
       </Routes>
     </BrowserRouter>
   );
