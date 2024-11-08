@@ -16,7 +16,7 @@ CREATE TABLE user_profile (
     contact VARCHAR(10) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE, 
     profile_picture_url VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES user(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE uploadedassignment (
