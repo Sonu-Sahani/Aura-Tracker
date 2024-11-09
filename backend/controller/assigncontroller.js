@@ -27,10 +27,11 @@ const postUploadData = async (req, res) => {
     const comments = req.body.comments;
     const filename = req.file.originalname;
     const Data = req.file.buffer;
+    const section = req.body.section;
     try {
       await db.query(
-        "INSERT INTO uploadedassignment (title,dueDate,comments,filename,data,year,branch) VALUES($1,$2,$3,$4,$5,$6,$7)",
-        [title, dueDate, comments, filename, Data, year, branch]
+        "INSERT INTO uploadedassignment (title,dueDate,comments,filename,data,year,branch,section) VALUES($1,$2,$3,$4,$5,$6,$7,$8)",
+        [title, dueDate, comments, filename, Data, year, branch, section]
       );
       res.redirect("/assignment/upload");
     } catch (err) {

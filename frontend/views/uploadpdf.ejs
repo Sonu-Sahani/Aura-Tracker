@@ -22,6 +22,10 @@
             <label for="branch">Branch</label>
             <input type="text" id="branch" name="branch" required>
 
+            <!-- New Section Input Field -->
+            <label for="section">Section</label>
+            <input type="text" id="section" name="section" required>
+
             <label for="comments">Comments</label>
             <textarea id="comments" name="comments" rows="3"></textarea>
 
@@ -36,7 +40,7 @@
             <% if (pdfFiles && pdfFiles.length) { %>
                 <% pdfFiles.forEach(function(pdf) { %>
                     <li>
-                        <span><%= pdf.title %> - Due: <%= pdf.dueDate %> (Year: <%= pdf.year %>, Branch: <%= pdf.branch %>)</span>
+                        <span><%= pdf.title %> - Due: <%= pdf.dueDate %> (Year: <%= pdf.year %>, Branch: <%= pdf.branch %>, Section: <%= pdf.section %>)</span>
                         <p><%= pdf.comments %></p>
                         <a href="/assignment/pdfs/<%= pdf.id %>/download">Download</a>
                         <a href="/assignment/pdfs/<%= pdf.id %>/view" target="_blank">View</a>
