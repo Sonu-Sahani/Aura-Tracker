@@ -1,35 +1,49 @@
 import nodemailer from "nodemailer";
-async function sendEmail(data, email) {
+
+async function sendEmail(otp, email) {
   let transporter = nodemailer.createTransport({
-    service: "gmail", //which service you are using it can be yahho,outlook,gmail
+    service: "gmail",
     auth: {
-      user: "monojitbairagi0@gmail.com", //sender email
-      pass: "maitrmgrfffhydfo", //app-specific password in order to make it search on https://www.youtube.com/watch?v=74QQfPrk4vE
+      user: "monojitbairagi0@gmail.com",
+      pass: "maitrmgrfffhydfo",
     },
   });
+
   const mailOptions = {
-    from: "monojitbairagi0@gmail.com", //sender email address
-    to: `${email}`, //receiver addressb
-    subject: "Task Reminder", //subject of emial
-    text: `${data}`, //email text
+    from: "monojitbairagi0@gmail.com",
+    to: email,
+    subject: "Your OTP Verification Code",
+    html: `
+      <div style="max-width: 600px; margin: auto; padding: 20px; border: 1px solid #e0e0e0; font-family: Arial, sans-serif;">
+        <h2 style="text-align: center; color: black;">Aura Tracker OTP Verification</h2>
+        <p style="font-size: 16px; color: #555;">Hello,</p>
+        <p style="font-size: 16px; color: #555;">Thank you for using our service! Please use the following One-Time Password (OTP) to verify your account:</p>
+        <div style="text-align: center; margin: 20px 0;">
+          <span style="font-size: 24px; font-weight: bold; color: black;">${otp}</span>
+        </div>
+        <p style="font-size: 16px; color: #555;">This OTP is valid for only 2 minutes. Please do not share it with anyone for security purposes.</p>
+        <p style="font-size: 16px; color: #555;">Best regards,<br>Your Aura Tracker Team</p>
+        <hr style="border: none; border-top: 1px solid #e0e0e0;">
+        <p style="text-align: center; font-size: 12px; color: #aaa;">If you did not request this OTP, please ignore this email.</p>
+      </div>
+    `,
   };
 
-  //send email
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      // console.log(error)
-      console.log("harsh");
+      console.log("Error sending email:", error);
     } else {
-      console.log("succskldkj");
-      // console.log("Email send"+info.response)
+      console.log("Email sent successfully:", info.response);
     }
   });
 }
+
 function optGenerator() {
-  let opt = Math.floor(Math.random() * 9000 + 1000);
-  console.log(opt);
-  return opt;
+  let otp = Math.floor(Math.random() * 9000 + 1000);
+  console.log(otp);
+  return otp;
 }
+
 const sendmail = {
   sendEmail,
   optGenerator,

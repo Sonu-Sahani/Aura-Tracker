@@ -13,16 +13,24 @@
         <div class="shape first"></div>
         <div class="shape second"></div>
     </div>
-    <form id="otpForm" method="post">
+    <form id="otpForm" method="post" action="/auth/opt">
         <h3>OTP Verification</h3>
 
         <label for="otp">Enter OTP</label>
         <input type="text" placeholder="Enter OTP" id="otp" name="otp">
-        <input  type="email" value='<%= email %>' name="email" style="display: none;" >
-        <input  type="password" value="<%= password %>" name='password' style="display: none;" >
-        <button type="submit" formaction="/auth/opt">Verify</button>
-        <button type="submit" formaction="/auth/resendopt">Resend</button>
+        <input type="email" value="<%= email %>" name="email" style="display: none;">
+        <input type="password" value="<%= password %>" name="password" style="display: none;">
+        
+        <button type="submit" onclick="setFormAction('/auth/opt')">Verify</button>
+        <button type="submit" onclick="setFormAction('/auth/resendopt')">Resend</button>
     </form>
+
+    <script>
+        
+        function setFormAction(action) {
+            document.getElementById("otpForm").action = action;
+        }
+    </script>
 </body>
 
 </html>
