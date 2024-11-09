@@ -44,11 +44,15 @@ CREATE TABLE submitassignment(
 
 
 CREATE TABLE schedule (
+    id SERIAL PRIMARY KEY,
     day INT,
     time VARCHAR(50),
     subject VARCHAR(50),
     teacher VARCHAR(50),
-    venue VARCHAR(50)
+    venue VARCHAR(50),
+    year VARCHAR(1) NOT NULL,
+    branch VARCHAR(5) NOT NULL,
+    section VARCHAR(1) NOT NULL
 );
 
 

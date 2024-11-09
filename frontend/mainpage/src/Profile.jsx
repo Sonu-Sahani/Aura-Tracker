@@ -120,7 +120,7 @@ const Profile = () => {
             <input
               type="text"
               name="fullName"
-              value={formData.fullName}
+              value={formData.student_name}
               onChange={handleChange}
               required
             />
@@ -131,7 +131,7 @@ const Profile = () => {
             <input
               type="text"
               name="registrationNo"
-              value={formData.registrationNo}
+              value={formData.registration_num}
               onChange={handleChange}
               required
             />
@@ -162,14 +162,14 @@ const Profile = () => {
             Branch:
             <select name="branch" value={formData.branch} onChange={handleChange} required>
               <option value="">Select Branch</option>
-              <option value="cse">Computer Science Engineering</option>
-              <option value="civil">Civil Engineering</option>
-              <option value="me">Mechanical Engineering</option>
-              <option value="ee">Electrical Engineering</option>
-              <option value="ece">Electronics and Communication Engineering</option>
-              <option value="be">Biotechnology Engineering</option>
-              <option value="pie">Production and Industrial Engineering</option>
-              <option value="che">Chemical Engineering</option>
+              <option value="CSE">Computer Science Engineering</option>
+              <option value="CIVIL">Civil Engineering</option>
+              <option value="ME">Mechanical Engineering</option>
+              <option value="EE">Electrical Engineering</option>
+              <option value="ECE">Electronics and Communication Engineering</option>
+              <option value="BT">Biotechnology Engineering</option>
+              <option value="PIE">Production and Industrial Engineering</option>
+              <option value="CHE">Chemical Engineering</option>
             </select>
           </label>
 
