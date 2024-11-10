@@ -85,7 +85,7 @@
 .assignment-item.completed {
   background-color: #e9ffe5;
   color: #666;
-  text-decoration: line-through;
+  display: none;
 }
 
 .assignment-item h3 {
